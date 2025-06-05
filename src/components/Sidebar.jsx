@@ -14,24 +14,24 @@ export default function Sidebar() {
     { id: "dashboard", label: "Dashboard", path: "/dashboard", icon: "📊" },
     {
       id: "costs",
-      label: "Nhập nguyên liệu",
+      label: "Nguyên liệu",
       path: "/costs/management",
       icon: "📦",
     },
     {
       id: "revenues",
-      label: "Nhập doanh thu",
+      label: "Doanh thu",
       path: "/revenues/management",
       icon: "💰",
     },
     { id: "reports", label: "Báo cáo", path: "/reports", icon: "📈" },
     {
       id: "ingredient",
-      label: "Nhập nguyên liệu làm bánh",
+      label: "Nguyên liệu làm bánh",
       path: "/ingredient",
       icon: "🍪",
     },
-    { id: "product", label: "Tính giá làm bánh", path: "/product", icon: "🧮" },
+    { id: "product", label: "Tính giá", path: "/product", icon: "🧮" },
   ];
 
   useEffect(() => {
@@ -66,20 +66,19 @@ export default function Sidebar() {
   // Mobile bottom nav
   if (isMobile) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-800 text-white flex justify-around items-center h-20 z-50 border-t border-gray-700">
+      <div className="fixed bottom-0 space-x-1 left-0 right-0 bg-gray-800 text-white flex justify-around items-center h-20 z-50 border-t border-gray-700">
         {menuItems.map((item) => (
           <NavLink
             key={item.id}
             to={item.path}
             onClick={() => handleNavigate(item.id)}
             className={({ isActive }) =>
-              `flex flex-col items-center text-center justify-center w-full text-sm ${
-                isActive ? "text-blue-400 font-semibold" : "hover:text-blue-300"
+              `flex flex-col w-full h-full items-center text-center justify-center w-full text-sm ${
+                isActive ? "text-cyan-200 border-b border-cyan-400 bg-gradient-to-b from-transparent to-[rgba(34,211,238,.1)] font-semibold" : "hover:text-blue-300"
               }`
             }
           >
-            <span className="text-xl">{item.icon}</span>
-            <span>{item.label}</span>
+            <span className="text-xs lg:text-base">{item.label}</span>
           </NavLink>
         ))}
       </div>
@@ -123,9 +122,9 @@ export default function Sidebar() {
             onMouseEnter={() => setHoveredItem(item.id)}
             onMouseLeave={() => setHoveredItem(null)}
             className={({ isActive }) =>
-              `relative flex items-center gap-3 px-3 py-2 rounded transition-all duration-150 ${
+              `relative flex items-center gap-3 px-3 py-2 transition-all duration-150 ${
                 isActive
-                  ? "bg-blue-900 text-blue-400 font-semibold"
+                  ? "bg-gradient-to-r from-transparent to-[rgba(34,211,238,.1)] border-r-3 border-cyan-400 font-semibold"
                   : "hover:bg-gray-700"
               }`
             }

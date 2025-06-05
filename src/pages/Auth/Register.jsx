@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PiEye, PiEyeSlash } from "react-icons/pi";
 
 export default function Register() {
@@ -19,7 +19,11 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       await setDoc(doc(db, "users", user.uid), {
@@ -31,7 +35,21 @@ export default function Register() {
       alert("Đăng ký thành công! Bạn sẽ được chuyển đến trang đăng nhập.");
       navigate("/login");
     } catch (error) {
-      setErr("Email đã tồn tại hoặc mật khẩu không hợp lệ!");
+      console.error("Firebase Register Error:", error);
+
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setErr("Email đã tồn tại!");
+          break;
+        case "auth/invalid-email":
+          setErr("Email không hợp lệ!");
+          break;
+        case "auth/weak-password":
+          setErr("Mật khẩu quá yếu, cần ít nhất 6 ký tự!");
+          break;
+        default:
+          setErr("Đăng ký thất bại. Vui lòng thử lại.");
+      }
     } finally {
       setLoading(false);
     }
@@ -51,7 +69,10 @@ export default function Register() {
         <h3 className="text-lg font-semibold mb-6 text-gray-700">
           Tạo tài khoản mới và chill 😋
         </h3>
-        <form onSubmit={handleRegister} className="space-y-5 text-left relative">
+        <form
+          onSubmit={handleRegister}
+          className="space-y-5 text-left relative"
+        >
           <input
             type="email"
             placeholder="Email"
@@ -96,7 +117,9 @@ export default function Register() {
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-lg font-semibold text-white text-lg transition ${
-              loading ? "bg-pink-300 cursor-not-allowed" : "bg-pink-500 hover:bg-pink-600"
+              loading
+                ? "bg-pink-300 cursor-not-allowed"
+                : "bg-pink-500 hover:bg-pink-600"
             }`}
           >
             {loading ? "Đang xử lý..." : "Đăng ký"}
@@ -105,9 +128,9 @@ export default function Register() {
 
         <p className="mt-6 text-sm text-gray-500">
           Đã có tài khoản?{" "}
-          <a href="/login" className="text-pink-500 hover:underline">
+          <Link to="/login" className="text-pink-500 hover:underline">
             Đăng nhập ngay
-          </a>
+          </Link>
         </p>
       </div>
     </div>

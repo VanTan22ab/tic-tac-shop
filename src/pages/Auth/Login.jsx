@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/config";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PiEye, PiEyeSlash } from "react-icons/pi";
 
 export default function Login() {
@@ -21,7 +21,24 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
     } catch (error) {
-      setErr("Email hoặc mật khẩu không đúng!");
+      console.error("Firebase Login Error:", error);
+
+      switch (error.code) {
+        case "auth/user-not-found":
+          setErr("Tài khoản không tồn tại!");
+          break;
+        case "auth/wrong-password":
+          setErr("Mật khẩu không đúng!");
+          break;
+        case "auth/invalid-email":
+          setErr("Email không hợp lệ!");
+          break;
+        case "auth/too-many-requests":
+          setErr("Quá nhiều lần đăng nhập thất bại, vui lòng thử lại sau.");
+          break;
+        default:
+          setErr("Đăng nhập thất bại. Vui lòng thử lại.");
+      }
     } finally {
       setLoading(false);
     }
@@ -85,7 +102,9 @@ export default function Login() {
             type="submit"
             disabled={loading}
             className={`w-full py-2 rounded-lg font-semibold text-white text-lg transition ${
-              loading ? "bg-pink-300 cursor-not-allowed" : "bg-pink-500 hover:bg-pink-600"
+              loading
+                ? "bg-pink-300 cursor-not-allowed"
+                : "bg-pink-500 hover:bg-pink-600"
             }`}
           >
             {loading ? "Đang xử lý..." : "Đăng nhập"}
@@ -93,9 +112,9 @@ export default function Login() {
         </form>
         <p className="mt-6 text-sm text-gray-500">
           Chưa có tài khoản?{" "}
-          <a href="/register" className="text-pink-500 hover:underline">
+          <Link to="/register" className="text-pink-500 hover:underline">
             Đăng ký ngay
-          </a>
+          </Link>
         </p>
       </div>
     </div>

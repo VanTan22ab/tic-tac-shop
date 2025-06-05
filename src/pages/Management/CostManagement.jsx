@@ -153,8 +153,8 @@ export default function CostManagement() {
         </button>
       </div>
 
-      <div className="mb-4">
-        <label htmlFor="filterMonth" className="mr-2 font-semibold">
+      <div className="mb-4 flex items-center">
+        <label htmlFor="filterMonth" className="mr-2 whitespace-nowrap font-semibold">
           Lọc theo tháng:
         </label>
         <input
@@ -162,7 +162,7 @@ export default function CostManagement() {
           type="month"
           value={filterMonth}
           onChange={handleFilterChange}
-          className="border p-1 rounded"
+          className="border p-1 rounded w-full md:w-48"
         />
         {filterMonth && (
           <button
@@ -179,7 +179,10 @@ export default function CostManagement() {
 
       {showAddForm && (
         <div className="mb-6">
-          <CostForm onClose={() => setShowAddForm(false)} onSuccess={fetchCosts} />
+          <CostForm
+            onClose={() => setShowAddForm(false)}
+            onSuccess={fetchCosts}
+          />
         </div>
       )}
 
@@ -223,7 +226,9 @@ export default function CostManagement() {
                     </td>
                     <td className="p-3 border-b text-sm text-gray-500">
                       {cost.createdAt
-                        ? `${formatDate(cost.createdAt)} ${cost.createdAt.toLocaleTimeString("vi-VN", {
+                        ? `${formatDate(
+                            cost.createdAt
+                          )} ${cost.createdAt.toLocaleTimeString("vi-VN", {
                             hour: "2-digit",
                             minute: "2-digit",
                             second: "2-digit",
@@ -231,18 +236,20 @@ export default function CostManagement() {
                         : "-"}
                     </td>
                     <td className="p-3 border-b space-x-4">
-                      <button
-                        onClick={() => startEdit(cost)}
-                        className="text-blue-600 hover:underline font-semibold"
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        onClick={() => deleteCost(cost.id)}
-                        className="text-red-600 hover:underline font-semibold"
-                      >
-                        Xóa
-                      </button>
+                      <div className="flex gap-4">
+                        <button
+                          onClick={() => startEdit(cost)}
+                          className="text-blue-600 border p-2 rounded-lg hover:underline font-semibold"
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => deleteCost(cost.id)}
+                          className="text-red-600 border p-2 rounded-lg  hover:underline font-semibold"
+                        >
+                          Xóa
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -274,7 +281,9 @@ export default function CostManagement() {
 
       {editCost && (
         <div className="absolute top-20 lg:w-[50%] right-8 lg:right-70 mt-8 p-6 border rounded-lg bg-blue-50 shadow-inner">
-          <h3 className="text-xl font-bold mb-4 text-blue-800">✏️ Chỉnh sửa nguyên liệu</h3>
+          <h3 className="text-xl font-bold mb-4 text-blue-800">
+            ✏️ Chỉnh sửa nguyên liệu
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input
               name="name"

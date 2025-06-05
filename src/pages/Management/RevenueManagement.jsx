@@ -168,7 +168,7 @@ export default function RevenueManagement() {
 
       {/* Lọc tháng */}
       <div className="mb-4 flex items-center gap-3">
-        <label className="font-semibold text-gray-700">
+        <label className="font-semibold whitespace-nowrap flex items-center w-full text-gray-700">
           Chọn tháng:
           <input
             type="month"
@@ -177,7 +177,7 @@ export default function RevenueManagement() {
               setFilterMonth(e.target.value);
               setCurrentPage(1); // reset trang khi thay đổi bộ lọc
             }}
-            className="ml-2 border rounded p-1"
+            className="ml-2 border rounded p-1 w-full md:w-42"
           />
         </label>
         {filterMonth && (
@@ -243,18 +243,20 @@ export default function RevenueManagement() {
                       {formatDate(revenue.createdAt)}
                     </td>
                     <td className="p-3 border-b space-x-4">
-                      <button
-                        onClick={() => startEdit(revenue)}
-                        className="text-blue-600 hover:underline font-semibold"
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        onClick={() => deleteRevenue(revenue.id)}
-                        className="text-red-600 hover:underline font-semibold"
-                      >
-                        Xóa
-                      </button>
+                      <div className="flex gap-4">
+                        <button
+                          onClick={() => startEdit(revenue)}
+                          className="text-blue-600 border p-2 rounded-lg hover:underline font-semibold"
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => deleteRevenue(revenue.id)}
+                          className="text-red-600 border p-2 rounded-lg hover:underline font-semibold"
+                        >
+                          Xóa
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

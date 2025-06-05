@@ -65,14 +65,14 @@ function RevenueForm({ onClose, onSuccess }) {
       <form className="space-y-4" onSubmit={handleSubmit}>
         <input
           className="w-full border p-2 rounded"
-          placeholder="Tên món bán"
+          placeholder="Nhập tiêu đề"
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
         />
         <input
           className="w-full border p-2 rounded"
           type="number"
-          placeholder="Giá bán mỗi món"
+          placeholder="Nhập doanh thu"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           min="1"
