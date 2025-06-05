@@ -9,9 +9,8 @@ registerLocale("vi", vi);
 
 function RevenueForm({ onClose, onSuccess }) {
   const [itemName, setItemName] = useState("");
-  const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(new Date()); // Mặc định là hôm nay
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -20,13 +19,8 @@ function RevenueForm({ onClose, onSuccess }) {
     setError(null);
     setSuccess(null);
 
-    if (!itemName || !quantity || !price || !date) {
+    if (!itemName || !price || !date) {
       setError("Vui lòng điền đầy đủ thông tin.");
-      return;
-    }
-
-    if (quantity <= 0 || price <= 0) {
-      setError("Số lượng và giá phải lớn hơn 0.");
       return;
     }
 
@@ -40,17 +34,15 @@ function RevenueForm({ onClose, onSuccess }) {
       await addDoc(collection(db, "revenues"), {
         userId: user.uid,
         itemName,
-        quantity: Number(quantity),
         price: Number(price),
-        date: date.toISOString().split("T")[0], // Lưu dạng yyyy-mm-dd
+        date: date.toISOString().split("T")[0], // yyyy-mm-dd
         createdAt: serverTimestamp(),
       });
 
       setSuccess("Lưu doanh thu thành công!");
       setItemName("");
-      setQuantity("");
       setPrice("");
-      setDate(null);
+      setDate(new Date()); // Reset lại ngày hôm nay sau khi lưu
 
       if (onSuccess) onSuccess();
       if (onClose) onClose();

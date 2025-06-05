@@ -29,7 +29,11 @@ function Dashboard() {
   const [vatTax, setVatTax] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const currentMonth = new Date().toISOString().slice(0, 7); // "2025-06"
+  // ✅ Lấy tháng hiện tại theo giờ hệ thống
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const currentMonth = `${year}-${month}`; // ví dụ: "2025-05"
 
   const filterByMonth = (data, monthString) => {
     if (!monthString) return data;

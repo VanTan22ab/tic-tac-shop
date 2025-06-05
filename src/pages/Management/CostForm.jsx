@@ -9,9 +9,8 @@ registerLocale("vi", vi);
 
 export default function CostForm({ onClose, onSuccess }) {
   const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(new Date()); // Mặc định là hôm nay
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -19,7 +18,7 @@ export default function CostForm({ onClose, onSuccess }) {
     e.preventDefault();
     setError(null);
 
-    if (!name || !quantity || !price || !date) {
+    if (!name || !price || !date) {
       setError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
@@ -32,16 +31,14 @@ export default function CostForm({ onClose, onSuccess }) {
       await addDoc(collection(db, "costs"), {
         userId: user.uid,
         name,
-        quantity: Number(quantity),
         price: Number(price),
         date: date.toISOString().split("T")[0],
         createdAt: serverTimestamp(),
       });
 
       setName("");
-      setQuantity("");
       setPrice("");
-      setDate(null);
+      setDate(new Date()); // Reset lại ngày là hôm nay
 
       if (onSuccess) onSuccess();
       if (onClose) onClose();
@@ -62,14 +59,6 @@ export default function CostForm({ onClose, onSuccess }) {
           placeholder="Tên nguyên liệu"
           value={name}
           onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="number"
-          min="0"
-          className="w-full border border-gray-300 p-2 rounded"
-          placeholder="Số lượng"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
         />
         <input
           type="number"

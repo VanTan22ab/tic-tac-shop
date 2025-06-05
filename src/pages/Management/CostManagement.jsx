@@ -35,7 +35,6 @@ export default function CostManagement() {
   const [editCost, setEditCost] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
-    quantity: 0,
     price: 0,
     date: null, // sửa thành null vì sẽ dùng Date object
   });
@@ -82,7 +81,6 @@ export default function CostManagement() {
     setEditCost(cost);
     setFormData({
       name: cost.name,
-      quantity: cost.quantity,
       price: cost.price,
       date: cost.date ? new Date(cost.date) : null,
     });
@@ -90,7 +88,7 @@ export default function CostManagement() {
 
   function cancelEdit() {
     setEditCost(null);
-    setFormData({ name: "", quantity: 0, price: 0, date: null });
+    setFormData({ name: "", price: 0, date: null });
   }
 
   function handleChange(e) {
@@ -103,7 +101,6 @@ export default function CostManagement() {
     const costDoc = doc(db, "costs", editCost.id);
     await updateDoc(costDoc, {
       name: formData.name,
-      quantity: Number(formData.quantity),
       price: Number(formData.price),
       date: formData.date ? formData.date.toISOString() : "",
     });
@@ -200,7 +197,6 @@ export default function CostManagement() {
                 <tr className="text-center">
                   <th className="p-3 border-b">#</th>
                   <th className="p-3 border-b">🥬 Tên nguyên liệu</th>
-                  <th className="p-3 border-b">📦 Số lượng</th>
                   <th className="p-3 border-b">💰 Đơn giá</th>
                   <th className="p-3 border-b">📅 Ngày nhập</th>
                   <th className="p-3 border-b">🕒 Ngày tạo</th>
@@ -217,7 +213,6 @@ export default function CostManagement() {
                       {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
                     </td>
                     <td className="p-3 border-b">{cost.name}</td>
-                    <td className="p-3 border-b">{cost.quantity}</td>
                     <td className="p-3 border-b text-red-600 font-medium">
                       {cost.price.toLocaleString()} ₫
                     </td>
@@ -284,21 +279,13 @@ export default function CostManagement() {
           <h3 className="text-xl font-bold mb-4 text-blue-800">
             ✏️ Chỉnh sửa nguyên liệu
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
             <input
               name="name"
               value={formData.name}
               onChange={handleChange}
               className="border p-2 rounded-md w-full"
               placeholder="Tên nguyên liệu"
-            />
-            <input
-              name="quantity"
-              type="number"
-              value={formData.quantity}
-              onChange={handleChange}
-              className="border p-2 rounded-md w-full"
-              placeholder="Số lượng"
             />
             <input
               name="price"

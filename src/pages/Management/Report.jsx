@@ -10,10 +10,17 @@ import { exportReportToExcel } from "../../utils/excelUtils";
 import { auth } from "../../firebase/config";
 
 export default function Report() {
+  // Khởi tạo selectedMonth mặc định là tháng hiện tại (YYYY-MM)
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    return `${year}-${month}`;
+  });
+
   const [costs, setCosts] = useState([]);
   const [revenues, setRevenues] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -59,11 +66,15 @@ export default function Report() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Báo cáo Doanh thu & Thuế</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
+        Báo cáo Doanh thu & Thuế
+      </h2>
 
       <div className="flex justify-center mb-6">
         <div className="flex items-center gap-2">
-          <label htmlFor="month" className="font-medium text-gray-700">Chọn tháng:</label>
+          <label htmlFor="month" className="font-medium text-gray-700">
+            Chọn tháng:
+          </label>
           <input
             id="month"
             type="month"
@@ -80,22 +91,30 @@ export default function Report() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div className="bg-white shadow rounded p-4 border-l-4 border-red-500">
             <p className="text-gray-600">Tổng chi phí</p>
-            <h3 className="text-xl font-bold text-red-600">{totalCost.toLocaleString()} VNĐ</h3>
+            <h3 className="text-xl font-bold text-red-600">
+              {totalCost.toLocaleString()} VNĐ
+            </h3>
           </div>
 
           <div className="bg-white shadow rounded p-4 border-l-4 border-green-500">
             <p className="text-gray-600">Tổng doanh thu</p>
-            <h3 className="text-xl font-bold text-green-600">{totalRevenue.toLocaleString()} VNĐ</h3>
+            <h3 className="text-xl font-bold text-green-600">
+              {totalRevenue.toLocaleString()} VNĐ
+            </h3>
           </div>
 
           <div className="bg-white shadow rounded p-4 border-l-4 border-yellow-500">
             <p className="text-gray-600">Thuế VAT (10%)</p>
-            <h3 className="text-xl font-bold text-yellow-600">{vatTax.toLocaleString()} VNĐ</h3>
+            <h3 className="text-xl font-bold text-yellow-600">
+              {vatTax.toLocaleString()} VNĐ
+            </h3>
           </div>
 
           <div className="bg-white shadow rounded p-4 border-l-4 border-blue-500">
             <p className="text-gray-600">Lợi nhuận</p>
-            <h3 className="text-xl font-bold text-blue-600">{profit.toLocaleString()} VNĐ</h3>
+            <h3 className="text-xl font-bold text-blue-600">
+              {profit.toLocaleString()} VNĐ
+            </h3>
           </div>
         </div>
       )}

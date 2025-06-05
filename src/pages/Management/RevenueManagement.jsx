@@ -24,7 +24,6 @@ export default function RevenueManagement() {
   const [editRevenue, setEditRevenue] = useState(null);
   const [formData, setFormData] = useState({
     itemName: "",
-    quantity: 0,
     price: 0,
   });
   // riêng trạng thái ngày dùng DatePicker
@@ -102,7 +101,6 @@ export default function RevenueManagement() {
     setEditRevenue(revenue);
     setFormData({
       itemName: revenue.itemName || "",
-      quantity: revenue.quantity || 0,
       price: revenue.price || 0,
     });
     setDate(revenue.date ? new Date(revenue.date) : null);
@@ -110,7 +108,7 @@ export default function RevenueManagement() {
 
   function cancelEdit() {
     setEditRevenue(null);
-    setFormData({ itemName: "", quantity: 0, price: 0 });
+    setFormData({ itemName: "", price: 0 });
     setDate(null);
   }
 
@@ -128,7 +126,6 @@ export default function RevenueManagement() {
     const revenueDoc = doc(db, "revenues", editRevenue.id);
     await updateDoc(revenueDoc, {
       itemName: formData.itemName,
-      quantity: Number(formData.quantity),
       price: Number(formData.price),
       date: date.toISOString(), // lưu dạng ISO string
     });
@@ -216,11 +213,9 @@ export default function RevenueManagement() {
               <thead className="bg-gray-100 text-gray-700 text-center">
                 <tr>
                   <th className="p-3 border-b">#</th>
-                  <th className="p-3 border-b">🛒 Tên món</th>
-                  <th className="p-3 border-b">📦 Số lượng</th>
-                  <th className="p-3 border-b">💵 Giá bán</th>
+                  <th className="p-3 border-b">🛒 Tiêu đề doanh thu</th>
+                  <th className="p-3 border-b">💵 Tổng tiền</th>
                   <th className="p-3 border-b">📅 Ngày nhập</th>
-                  <th className="p-3 border-b">⏰ Ngày tạo</th>
                   <th className="p-3 border-b">⚙️ Thao tác</th>
                 </tr>
               </thead>
@@ -234,14 +229,10 @@ export default function RevenueManagement() {
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </td>
                     <td className="p-3 border-b">{revenue.itemName}</td>
-                    <td className="p-3 border-b">{revenue.quantity}</td>
                     <td className="p-3 border-b text-green-600 font-medium">
                       {revenue.price.toLocaleString()} ₫
                     </td>
                     <td className="p-3 border-b">{formatDate(revenue.date)}</td>
-                    <td className="p-3 border-b">
-                      {formatDate(revenue.createdAt)}
-                    </td>
                     <td className="p-3 border-b space-x-4">
                       <div className="flex gap-4">
                         <button
@@ -312,18 +303,6 @@ export default function RevenueManagement() {
                     name="itemName"
                     value={formData.itemName}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded border-gray-300 shadow-sm"
-                    required
-                  />
-                </label>
-                <label className="block mb-2 font-semibold text-gray-600">
-                  Số lượng
-                  <input
-                    type="number"
-                    name="quantity"
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    min={0}
                     className="mt-1 block w-full rounded border-gray-300 shadow-sm"
                     required
                   />
