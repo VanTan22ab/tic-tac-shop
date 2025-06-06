@@ -104,7 +104,7 @@ export default function Report() {
           </div>
 
           <div className="bg-white shadow rounded p-4 border-l-4 border-yellow-500">
-            <p className="text-gray-600">Thuế VAT (10%)</p>
+            <p className="text-gray-600">Thuế VAT (4.5%)</p>
             <h3 className="text-xl font-bold text-yellow-600">
               {vatTax.toLocaleString()} VNĐ
             </h3>

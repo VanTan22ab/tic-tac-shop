@@ -29,8 +29,8 @@ export async function exportReportToExcel(
   titleCell.font = { size: 16, bold: true };
   titleCell.alignment = { horizontal: "center" };
 
-  // VAT và Lợi nhuận (trên đầu)
-  worksheet.getCell("A2").value = "Thuế VAT 10%";
+  // VAT và Lợi nhuận
+  worksheet.getCell("A2").value = "Thuế VAT 4.5%";
   worksheet.getCell("A2").font = { bold: true };
   worksheet.getCell("B2").value = formatCurrency(vatTax);
   worksheet.getCell("B2").alignment = { horizontal: "right" };
@@ -39,13 +39,12 @@ export async function exportReportToExcel(
   worksheet.getCell("A3").font = { bold: true };
   worksheet.getCell("B3").value = formatCurrency(profit);
   worksheet.getCell("B3").alignment = { horizontal: "right" };
-  // VAT và Lợi nhuận (trên đầu)
+
   const vatCellF = worksheet.getCell("A2");
   const vatCellG = worksheet.getCell("B2");
   const profitCellF = worksheet.getCell("A3");
   const profitCellG = worksheet.getCell("B3");
 
-  // Thiết lập font đậm, căn phải cho số tiền, căn trái/trung bình cho label
   [vatCellF, profitCellF].forEach((cell) => {
     cell.font = { bold: true };
     cell.alignment = { horizontal: "left" };
@@ -55,22 +54,19 @@ export async function exportReportToExcel(
     cell.font = { bold: false };
   });
 
-  // Áp dụng fill màu nền và border giống applyTotalStyle
   [vatCellF, vatCellG, profitCellF, profitCellG].forEach((cell) => {
     cell.fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "D9E1F2" },
     };
-    cell.border = {
-      top: { style: "thin", color: { argb: "000000" } },
-      bottom: { style: "thin", color: { argb: "000000" } },
-      left: { style: "thin", color: { argb: "000000" } },
-      right: { style: "thin", color: { argb: "000000" } },
-    };
+    cell.border = borderStyle();
   });
 
-  // Cột cho chi phí bắt đầu từ A, doanh thu bắt đầu từ E
+  // Sắp xếp theo ngày
+  costs.sort((a, b) => new Date(a.date) - new Date(b.date));
+  revenues.sort((a, b) => new Date(a.date) - new Date(b.date));
+
   let startRow = 5;
 
   // Chi phí
@@ -87,7 +83,7 @@ export async function exportReportToExcel(
   costs.forEach((item, index) => {
     const row = worksheet.getRow(startRow + index);
     row.getCell("A").value = item.date
-      ? new Date(item.date).toLocaleDateString()
+      ? new Date(item.date).toLocaleDateString("vi-VN")
       : "";
     row.getCell("B").value = item.name || "";
     row.getCell("C").value = formatCurrency(item.price || 0);
@@ -99,7 +95,7 @@ export async function exportReportToExcel(
   totalCostRow.getCell("C").value = formatCurrency(totalCost);
   applyTotalStyle(totalCostRow);
 
-  // Doanh thu (song song ở cột E)
+  // Doanh thu
   let revenueStartRow = 5;
 
   worksheet.getCell(`E${revenueStartRow}`).value = "Doanh thu";
@@ -115,33 +111,34 @@ export async function exportReportToExcel(
   revenues.forEach((item, index) => {
     const row = worksheet.getRow(revenueStartRow + index);
     row.getCell("E").value = item.date
-      ? new Date(item.date).toLocaleDateString()
+      ? new Date(item.date).toLocaleDateString("vi-VN")
       : "";
     row.getCell("F").value = item.itemName || "";
     row.getCell("G").value = formatCurrency(item.price || 0);
     applyZebraStyle(row, index);
   });
 
-  const totalRevenueRow = worksheet.getRow(revenueStartRow + revenues.length);
+  const totalRevenueRow = worksheet.getRow(
+    revenueStartRow + revenues.length
+  );
   totalRevenueRow.getCell("E").value = "Tổng doanh thu";
   totalRevenueRow.getCell("G").value = formatCurrency(totalRevenue);
   applyTotalStyle(totalRevenueRow);
 
-  // Căn lề, bo viền, độ rộng cột
   worksheet.columns = [
     { header: "Ngày", key: "ngayChiPhi", width: 15 },
     { header: "Tên", key: "tenChiPhi", width: 30 },
     { header: "Số tiền", key: "soTienChiPhi", width: 20 },
-    { header: "", width: 2 }, // khoảng cách giữa 2 bảng
+    { header: "", width: 2 },
     { header: "Ngày", key: "ngayDoanhThu", width: 15 },
     { header: "Tên", key: "tenDoanhThu", width: 30 },
     { header: "Số tiền", key: "soTienDoanhThu", width: 20 },
   ];
 
-  // Xuất file
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    type:
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   });
   saveAs(blob, "BaoCaoDoanhThu.xlsx");
 

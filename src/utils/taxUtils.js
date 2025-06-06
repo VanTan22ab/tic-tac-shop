@@ -8,7 +8,7 @@ export function calculateTotalRevenue(revenues) {
   return revenues.reduce((sum, item) => sum + (item.price || 0), 0);
 }
 
-export function calculateVatTax(totalRevenue, rate = 0.1) {
+export function calculateVatTax(totalRevenue, rate = 0.045) {
   return totalRevenue * rate;
 }
 
