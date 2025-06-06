@@ -120,7 +120,7 @@ function Dashboard() {
           <FaReceipt className="text-4xl text-yellow-500" />
           <div>
             <h2 className="text-md font-semibold text-yellow-700">
-              Thuế ước tính (10%)
+              Thuế ước tính (4.5%)
             </h2>
             <p className="text-xl font-bold text-yellow-800">
               {loading ? "..." : `₫${vatTax.toLocaleString()}`}
